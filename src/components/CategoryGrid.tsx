@@ -38,7 +38,7 @@ export default function CategoryGrid({ pages, currentPage, onPageChange, totals,
   }
 
   return (
-    <div className="category-carousel">
+    <div className="category-carousel" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div className="carousel" ref={containerRef} onScroll={handleScroll}>
         {pages.map((page, pageIndex) => (
           <div key={page.title} className="carousel-page">
