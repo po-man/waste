@@ -89,7 +89,7 @@ export default function App() {
   }
 
   function formatDateString(date: Date) {
-    return date.toISOString().replace(':', '.');
+    return date.toISOString().split('T')[0];
   }
 
   function handleExport() {

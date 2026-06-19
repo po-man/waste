@@ -11,7 +11,7 @@ export const DEFAULT_COUNT_CATEGORIES = [
 ]
 
 export const DEFAULT_WEIGHT_CATEGORIES = [
-  '發泡膠', '其他垃圾'
+  '發泡膠', '膠樽', '雜項'
 ]
 
 export type Action = {
