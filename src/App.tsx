@@ -38,7 +38,7 @@ const groupedCount = [
 ]
 
 const groupedWeight = [
-  { title: '秤重', items: ['發泡膠', '膠樽', '雜項'] }
+  { title: '秤重 (kg)', items: ['發泡膠', '膠樽', '雜項'] }
 ]
 
 const carouselPages = [
@@ -117,8 +117,8 @@ export default function App() {
   return (
     <div className="app">
       <div className="sticky-header">
-        <button onClick={handleExport}>Download Data</button>
-        <button onClick={clearSession}>Clear All</button>
+        <button onClick={handleExport}>下載數據</button>
+        <button onClick={clearSession}>清除數據</button>
       </div>
 
       <div className="main-content">
