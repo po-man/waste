@@ -11,8 +11,8 @@ export default function ActionLog({ actions, onUndo }: Props) {
     <div className="action-log">
       {actions.map(a => (
         <div key={a.id} className="entry">
-          <span>{`${a.type === 'count' ? 'Added' : 'Weighted'} ${a.value} to ${a.category}`}</span>
-          <button onClick={() => onUndo(a)}>UNDO</button>
+          <span>{ a.category } +{`${a.value} ${a.type === 'count' ? '' : 'kg'}`}</span>
+          <button onClick={() => onUndo(a)}>Undo</button>
         </div>
       ))}
     </div>
