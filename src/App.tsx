@@ -5,8 +5,7 @@ import {
   addEntry,
   createEmptyState,
   exportCSV,
-  undoAction,
-  setEventInfo
+  undoAction
 } from './lib/engine'
 import Numpad from './components/Numpad'
 import CategoryGrid from './components/CategoryGrid'
@@ -102,14 +101,9 @@ export default function App() {
     }
   }
 
-  function updateEventInfo(info: Record<string, string>) {
-    setEngineState(prev => setEventInfo(prev, info))
-  }
-
   return (
     <div className="app">
       <header>
-        <h1>Beach Cleanup Tally</h1>
         <div>
           <button onClick={() => setMode('count')} disabled={mode === 'count'}>Count</button>
           <button onClick={() => setMode('weight')} disabled={mode === 'weight'}>Weight</button>
@@ -117,15 +111,6 @@ export default function App() {
           <button onClick={clearSession}>Clear Session</button>
         </div>
       </header>
-
-      <section className="event-info">
-        <label>
-          Date: <input value={engineState.eventInfo.Date || ''} onChange={e => updateEventInfo({ Date: e.target.value })} />
-        </label>
-        <label>
-          Location: <input value={engineState.eventInfo.Location || ''} onChange={e => updateEventInfo({ Location: e.target.value })} />
-        </label>
-      </section>
 
       <CategoryGrid
         groups={mode === 'count' ? groupedCount : groupedWeight}

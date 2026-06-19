@@ -3,20 +3,20 @@ body { font-family: system-ui, Arial, sans-serif; padding: 1rem; }
 textarea { width: 100%; font-family: monospace; }
 button { margin-top: 0.5rem; }
 
-.event-info label { display: block; margin-bottom: 0.5rem; }
-
 .category-grid { margin-top: 1rem; }
-.category-grid .group { margin-bottom: 0.5rem; }
-.category-grid .header { display: flex; justify-content: space-between; width: 100%; padding: 0.4rem 0.5rem; background: #f0f0f0; border: none; font-weight: 600; font-size: 14px }
-.category-grid .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; padding: 0.35rem 0; }
-.category-grid .cat { padding: 0.45rem; background: #fff; border-radius: 6px; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 44px; }
-.category-grid .cat .name { font-size: 13px; line-height: 1.1 }
-.category-grid .cat .total { font-size: 16px; font-weight: 700; margin-top: 0.15rem; }
+.category-grid .group { margin-bottom: 0; }
+.category-grid .header { display: flex; justify-content: space-between; width: 100%; padding: 0.25rem 0.35rem; background: #f0f0f0; border: none; font-weight: 600; font-size: 13px }
+.category-grid .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0; }
+.category-grid .cat { padding: 0.35rem; background: #fff; border-radius: 4px; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 38px; margin: 0; }
+.category-grid .cat .name { font-size: 12px; line-height: 1.1 }
+.category-grid .cat .total { font-size: 14px; font-weight: 700; margin-top: 0.1rem; }
 
-.numpad { position: sticky; bottom: 0; background: #fafafa; padding: 0.4rem 0; }
-.numpad .display { text-align: right; padding: 0.35rem 0.75rem; font-size: 18px; }
-.numpad .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; padding: 0 0.35rem 0.35rem; }
-.numpad button { padding: 0.5rem; font-size: 16px; border-radius: 6px }
+.numpad { position: sticky; bottom: 0; background: #fafafa; padding: 0.25rem 0; }
+.numpad .display { text-align: right; padding: 0.25rem 0.5rem; font-size: 16px; }
+.numpad .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0; }
+.numpad button { padding: 0.3rem; font-size: 15px; border-radius: 4px; margin-top: 0; }
+
+.event-info { display: none; }
 
 @media (min-width: 900px) {
   .category-grid .items { grid-template-columns: repeat(4, 1fr); }
