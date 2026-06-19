@@ -5,7 +5,13 @@ html, body, #root {
   overflow: hidden; /* Prevent body scroll */
 }
 
-body { font-family: system-ui, Arial, sans-serif; }
+body {
+  font-family: system-ui, Arial, sans-serif;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard */
+}
 .app {
   max-width: 720px;
   margin: 0 auto;
