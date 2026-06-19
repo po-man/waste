@@ -38,7 +38,7 @@ const groupedCount = [
 ]
 
 const groupedWeight = [
-  { title: 'Weights', items: ['發泡膠', '膠樽', '雜項'] }
+  { title: '秤重', items: ['發泡膠', '膠樽', '雜項'] }
 ]
 
 const carouselPages = [

@@ -117,7 +117,7 @@ export function clearState(): State {
 export function exportCSV(state: State): string {
   const rows: string[] = []
   // Export timestamp
-  rows.push(`ExportTimestamp,${new Date().toISOString()}`)
+  rows.push(`數據日期,${new Date().toISOString()}`)
   rows.push('')
 
   // Event info rows
@@ -152,8 +152,8 @@ export function exportCSV(state: State): string {
   }
 
   // Counts Section
-  rows.push('Counts')
-  rows.push('Category,Total')
+  rows.push('數量')
+  rows.push('類別,總數量 (件)')
   const countKeys = new Set(DEFAULT_COUNT_CATEGORIES)
   for (const cat of DEFAULT_COUNT_CATEGORIES) {
     const total = finalCountTotals[cat] ?? 0
@@ -167,8 +167,8 @@ export function exportCSV(state: State): string {
   rows.push('')
 
   // Weights Section
-  rows.push('Weights')
-  rows.push('Category,Total')
+  rows.push('秤重')
+  rows.push('類別,總重量 (kg)')
   const weightKeys = new Set(DEFAULT_WEIGHT_CATEGORIES)
   for (const cat of DEFAULT_WEIGHT_CATEGORIES) {
     const total = finalWeightTotals[cat] ?? 0
@@ -183,10 +183,10 @@ export function exportCSV(state: State): string {
   // Actions (optional)
   if (state.actions && state.actions.length) {
     rows.push('')
-    rows.push('Actions')
-    rows.push('Timestamp,Category,Type,Value')
+    rows.push('原始數據')
+    rows.push('輸入時間,類別,數值')
     for (const a of state.actions.slice().reverse()) {
-      rows.push(`${new Date(a.timestamp).toISOString()},${escapeCsv(a.category)},${a.type},${a.value}`)
+      rows.push(`${new Date(a.timestamp).toISOString()},${escapeCsv(a.category)} ${a.type == 'weight' ? '(kg)' : ''},${a.value}`)
     }
   }
 
