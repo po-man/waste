@@ -62,14 +62,12 @@ textarea { width: 100%; font-family: monospace; }
 .numpad { background: #fafafa; padding: 0; }
 .numpad .display { text-align: right; padding: 0.25rem 0.5rem; font-size: 32px; }
 .numpad .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0; }
-.numpad button { padding: 0.3rem; font-size: 26px; border-radius: 4px; margin-top: 0; }
+.numpad button { padding: 0.3rem; font-size: 30px; border-radius: 4px; margin-top: 0; }
 
 .action-log { border: 1px solid #c4c4c4; border-radius: 6px; padding: 0 0.25rem; margin: 0 0.25rem; overflow-y: auto; background: #fff; }
-.action-log .entry { display: flex; justify-content: space-between; align-items: center; padding: 0 0.15rem; min-height: 28px; border-bottom: 1px solid #eee; font-size: 13px; }
+.action-log .entry { display: flex; justify-content: space-between; align-items: center; padding: 0 0.15rem; min-height: 28px; border-bottom: 1px solid #eee; font-size: 13px; color: #aaa; }
 .action-log .entry:last-child { border-bottom: none; }
-.action-log .entry.newest {
-  font-weight: 700;
-}
+.action-log .entry.newest { font-weight: 700; font-size: 20px; color: #111; }
 .action-log button { font-size: 12px; padding: 0 0.35rem; }
 
 .event-info { display: none; }
