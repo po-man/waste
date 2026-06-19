@@ -12,24 +12,65 @@ type Props = {
 }
 
 function getCategoryStyle(cat: string): React.CSSProperties {
-  const group1 = new Set(['飲筒', '飲品杯', '硬膠食物容器', '發泡膠容器', '外賣餐具'])
-  const group2 = new Set(['膠袋', '食品包裝袋', '生果網'])
-  const group3 = new Set(['膠水樽', '膠水樽樽蓋', '其他飲品與食物容器', '非食物的瓶罐與容器'])
-  const group4 = new Set(['金屬罐', '紙包/鋁包飲品盒', '玻璃瓶', '衣物/鞋履/袋'])
+  // Group Blue (derived from brand color #58BDFC)
+  const groupBlue = new Set([
+    '飲筒', '飲品杯', '硬膠食物容器', '發泡膠容器', '外賣餐具',
+    '牙刷', '針筒/針頭', '棉花棒', '口罩'
+  ])
+  // Group Peach (derived from brand color #FFD7AA)
+  const groupPeach = new Set([
+    '膠袋', '食品包裝袋', '生果網',
+    '煙頭', '火機', '其他',
+    '發泡膠', '膠樽', '雜項'
+  ])
+  // Group Mint (complementary soft teal/mint)
+  const groupMint = new Set([
+    '膠水樽', '膠水樽樽蓋', '其他飲品與食物容器', '非食物的瓶罐與容器',
+    '釣魚用具', '浮標浮球浮筒', '漁網與繩子'
+  ])
+  // Group Lavender (complementary soft lavender)
+  const groupLavender = new Set([
+    '金屬罐', '紙包/鋁包飲品盒', '玻璃瓶', '衣物/鞋履/袋'
+  ])
 
-  if (group1.has(cat)) {
-    return { backgroundColor: '#eeeeee', color: '#1111111', borderColor: '#dddddd' }
+  if (groupBlue.has(cat)) {
+    return {
+      backgroundColor: '#E6F4FE',
+      color: '#025287',
+      borderColor: '#B2DDFD',
+      boxShadow: '0 2px 5px rgba(88, 189, 252, 0.1)'
+    }
   }
-  if (group2.has(cat)) {
-    return { backgroundColor: '#f7f7f7', color: '#1111111', borderColor: '#dddddd' }
+  if (groupPeach.has(cat)) {
+    return {
+      backgroundColor: '#FFF2E6',
+      color: '#804000',
+      borderColor: '#FFDCBF',
+      boxShadow: '0 2px 5px rgba(255, 215, 170, 0.15)'
+    }
   }
-  if (group3.has(cat)) {
-    return { backgroundColor: '#e5e5e5', color: '#1111111', borderColor: '#dddddd' }
+  if (groupMint.has(cat)) {
+    return {
+      backgroundColor: '#E6F8F3',
+      color: '#005C3E',
+      borderColor: '#B3EDD8',
+      boxShadow: '0 2px 5px rgba(0, 92, 62, 0.05)'
+    }
   }
-  if (group4.has(cat)) {
-    return { backgroundColor: '#f7f7f7', color: '#1111111', borderColor: '#dddddd' }
+  if (groupLavender.has(cat)) {
+    return {
+      backgroundColor: '#FAF0FD',
+      color: '#531D74',
+      borderColor: '#ECC5FA',
+      boxShadow: '0 2px 5px rgba(83, 29, 116, 0.05)'
+    }
   }
-  return {}
+
+  return {
+    backgroundColor: '#F8FAFC',
+    color: '#334155',
+    borderColor: '#E2E8F0'
+  }
 }
 
 export default function CategoryGrid({ pages, currentPage, onPageChange, totals, onCategoryClick }: Props) {
