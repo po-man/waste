@@ -1,9 +1,22 @@
-body { font-family: system-ui, Arial, sans-serif; padding: 0.5rem; }
-.app { max-width: 720px; margin: 0 auto; }
-textarea { width: 100%; font-family: monospace; }
-button { margin-top: 0.5rem; }
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent body scroll */
+}
 
-.category-carousel { margin-top: 1rem; border-radius: 6px; overflow: hidden; }
+body { font-family: system-ui, Arial, sans-serif; }
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+textarea { width: 100%; font-family: monospace; }
+.sticky-header button { margin-top: 0.5rem; }
+
+.category-carousel { border-radius: 6px; overflow: hidden; }
 .carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 .carousel-page { min-width: 100%; padding: 0.5rem; scroll-snap-align: start; box-sizing: border-box; }
 .group-header { padding: 0.25rem 0; font-size: 13px; font-weight: 600; background: #f8f8f8; }
@@ -15,21 +28,27 @@ button { margin-top: 0.5rem; }
 .indicator { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #999; background: transparent; padding: 0; }
 .indicator.active { background: #333; }
 
-.sticky-header { position: sticky; top: 0; display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #fff; padding: 0.4rem 0.25rem }
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0.5rem 0.5rem;
+}
+
+.sticky-header { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #fff; padding: 0.4rem 0.25rem }
 .sticky-header button { flex: 1 1 auto; min-width: 70px; margin: 0 0.15rem; padding: 0.35rem 0.5rem; font-size: 13px; }
 
 .swipe-wrapper { touch-action: pan-y; }
 
-.sticky-panel { position: sticky; bottom: 0; background: #fff; z-index: 2; padding: 0.25rem 0; border-top: 1px solid #ddd; }
+.sticky-panel { background: #fff; z-index: 3; padding: 0.25rem 0; border-top: 1px solid #ddd; }
 .numpad { background: #fafafa; padding: 0; }
-.numpad .display { text-align: right; padding: 0.25rem 0.5rem; font-size: 16px; }
+.numpad .display { text-align: right; padding: 0.25rem 0.5rem; font-size: 32px; }
 .numpad .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0; }
-.numpad button { padding: 0.3rem; font-size: 15px; border-radius: 4px; margin-top: 0; }
+.numpad button { padding: 0.3rem; font-size: 20px; border-radius: 4px; margin-top: 0; }
 
-.action-log { border: 1px solid #c4c4c4; border-radius: 6px; padding: 0.25rem; margin: 0.25rem 0 0; max-height: 100px; overflow-y: auto; background: #fff; }
-.action-log .entry { display: flex; justify-content: space-between; align-items: center; padding: 0.15rem 0; border-bottom: 1px solid #eee; font-size: 13px; }
+.action-log { border: 1px solid #c4c4c4; border-radius: 6px; padding: 0 0.25rem; margin: 0 0.25rem; overflow-y: auto; background: #fff; }
+.action-log .entry { display: flex; justify-content: space-between; align-items: center; padding: 0 0.15rem; min-height: 28px; border-bottom: 1px solid #eee; font-size: 13px; }
 .action-log .entry:last-child { border-bottom: none; }
-.action-log button { font-size: 12px; padding: 0.15rem 0.35rem; }
+.action-log button { font-size: 12px; padding: 0 0.35rem; }
 
 .event-info { display: none; }
 

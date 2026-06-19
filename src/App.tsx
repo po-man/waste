@@ -116,16 +116,18 @@ export default function App() {
         <button onClick={clearSession}>Clear</button>
       </div>
 
-      <CategoryGrid
-        pages={carouselPages}
-        currentPage={page}
-        onPageChange={setPage}
-        totals={totals}
-        onCategoryClick={handleCategoryClick}
-      />
+      <div className="main-content">
+        <CategoryGrid
+          pages={carouselPages}
+          currentPage={page}
+          onPageChange={setPage}
+          totals={totals}
+          onCategoryClick={handleCategoryClick}
+        />
+      </div>
 
       <div className="sticky-panel">
-        <ActionLog actions={engineState.actions.slice(0, 1)} onUndo={handleUndo} />
+        <ActionLog actions={engineState.actions.slice(0, 2).reverse()} onUndo={handleUndo} />
         <Numpad
           value={numpadValue}
           onChange={setNumpadValue}
