@@ -88,13 +88,18 @@ export default function App() {
     setEngineState(prev => undoAction(prev, action.id))
   }
 
+  function formatDateString(date: Date) {
+    return date.toISOString().replace(':', '.');
+  }
+
   function handleExport() {
     const csv = exportCSV(engineState)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
+
     a.href = url
-    a.download = 'beach_cleanup_data.csv'
+    a.download = `beach_cleanup_data-${formatDateString(new Date())}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
