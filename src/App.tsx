@@ -41,6 +41,12 @@ const groupedWeight = [
   { title: 'Weights', items: ['發泡膠','其他垃圾'] }
 ]
 
+const carouselPages = [
+  { title: 'Page 1', groups: [groupedCount[0]] },
+  { title: 'Page 2', groups: [groupedCount[1], groupedCount[2], groupedCount[3]] },
+  { title: 'Page 3', groups: groupedWeight }
+]
+
 function loadState(): EngineState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -62,16 +68,18 @@ function saveState(s: EngineState) {
 export default function App() {
   const [engineState, setEngineState] = useState<EngineState>(() => loadState())
   const [numpadValue, setNumpadValue] = useState('')
-  const [mode, setMode] = useState<'count' | 'weight'>('count')
+  const [page, setPage] = useState(0)
 
   useEffect(() => saveState(engineState), [engineState])
 
   const totals = useMemo(() => engineState.totals, [engineState])
+  const decimalEnabled = page === 2
 
   function handleCategoryClick(category: string) {
     const val = numpadValue.trim() === '' ? 1 : Number(numpadValue)
     if (!isFinite(val)) return
-    const { state } = addEntry(engineState, category, val, mode)
+    const entryType = page === 2 ? 'weight' : 'count'
+    const { state } = addEntry(engineState, category, val, entryType)
     setEngineState(state)
     setNumpadValue('')
   }
@@ -104,14 +112,14 @@ export default function App() {
   return (
     <div className="app">
       <div className="sticky-header">
-        <button onClick={() => setMode('count')} disabled={mode === 'count'}>Count</button>
-        <button onClick={() => setMode('weight')} disabled={mode === 'weight'}>Weight</button>
         <button onClick={handleExport}>Download Data</button>
         <button onClick={clearSession}>Clear</button>
       </div>
 
       <CategoryGrid
-        groups={mode === 'count' ? groupedCount : groupedWeight}
+        pages={carouselPages}
+        currentPage={page}
+        onPageChange={setPage}
         totals={totals}
         onCategoryClick={handleCategoryClick}
       />
@@ -121,7 +129,7 @@ export default function App() {
         <Numpad
           value={numpadValue}
           onChange={setNumpadValue}
-          allowDecimal={mode === 'weight'}
+          allowDecimal={decimalEnabled}
         />
       </div>
     </div>
