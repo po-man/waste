@@ -40,9 +40,9 @@ describe('tally engine', () => {
 
     const csv = exportCSV(s)
     expect(csv).toContain('Date,2026-06-19')
-    expect(csv).toContain('Counts')
+    expect(csv).toContain('數量')
     expect(csv).toContain('膠袋,3')
-    expect(csv).toContain('Weights')
+    expect(csv).toContain('秤重')
     expect(csv).toContain('發泡膠,1.5')
 
     // Requirement 1: show categories even if they are 0, and keep original order
@@ -70,10 +70,10 @@ describe('tally engine', () => {
     } as any
 
     const csv = exportCSV(legacyState)
-    expect(csv).toContain('Counts')
+    expect(csv).toContain('數量')
     expect(csv).toContain('膠袋,3')
     expect(csv).toContain('煙頭,10')
-    expect(csv).toContain('Weights')
+    expect(csv).toContain('秤重')
     expect(csv).toContain('發泡膠,1.5')
     expect(csv).toContain('其他垃圾,2.2')
   })
