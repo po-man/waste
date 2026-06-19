@@ -105,8 +105,7 @@ export default function App() {
   }
 
   function clearSession() {
-    const resp = window.prompt('Type DELETE to permanently clear session data')
-    if (resp === 'DELETE') {
+    if (window.confirm('真係清除數據？')) {
       try {
         localStorage.removeItem(STORAGE_KEY)
       } catch (e) {}
