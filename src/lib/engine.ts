@@ -42,23 +42,28 @@ export function addEntry(state: State, category: string, value: number, type: En
   if (!category) throw new Error('category required')
   if (!isFinite(value)) throw new Error('value must be finite')
 
+  const processedValue = type === 'count' ? Math.round(value) : Math.round(value * 100) / 100
+
   const action: Action = {
     id: makeId(),
     category,
-    value,
+    value: processedValue,
     type,
     timestamp: Date.now()
   }
 
   const newTotals = { ...state.totals }
-  newTotals[category] = (newTotals[category] || 0) + value
+  const rawTotal = (newTotals[category] || 0) + processedValue
+  newTotals[category] = type === 'count' ? Math.round(rawTotal) : Math.round(rawTotal * 100) / 100
 
   const countTotals = { ...(state.countTotals || {}) }
   const weightTotals = { ...(state.weightTotals || {}) }
   if (type === 'count') {
-    countTotals[category] = (countTotals[category] || 0) + value
+    const rawCount = (countTotals[category] || 0) + processedValue
+    countTotals[category] = Math.round(rawCount)
   } else {
-    weightTotals[category] = (weightTotals[category] || 0) + value
+    const rawWeight = (weightTotals[category] || 0) + processedValue
+    weightTotals[category] = Math.round(rawWeight * 100) / 100
   }
 
   const newState: State = {
@@ -77,17 +82,21 @@ export function undoAction(state: State, actionId: string): State {
   if (idx === -1) return state
 
   const action = state.actions[idx]
+  const type = action.type
   const newTotals = { ...state.totals }
-  newTotals[action.category] = (newTotals[action.category] || 0) - action.value
+  const rawTotal = (newTotals[action.category] || 0) - action.value
+  newTotals[action.category] = type === 'count' ? Math.round(rawTotal) : Math.round(rawTotal * 100) / 100
   if (Math.abs(newTotals[action.category]) < 1e-9) delete newTotals[action.category]
 
   const countTotals = { ...(state.countTotals || {}) }
   const weightTotals = { ...(state.weightTotals || {}) }
-  if (action.type === 'count') {
-    countTotals[action.category] = (countTotals[action.category] || 0) - action.value
+  if (type === 'count') {
+    const rawCount = (countTotals[action.category] || 0) - action.value
+    countTotals[action.category] = Math.round(rawCount)
     if (Math.abs(countTotals[action.category]) < 1e-9) delete countTotals[action.category]
   } else {
-    weightTotals[action.category] = (weightTotals[action.category] || 0) - action.value
+    const rawWeight = (weightTotals[action.category] || 0) - action.value
+    weightTotals[action.category] = Math.round(rawWeight * 100) / 100
     if (Math.abs(weightTotals[action.category]) < 1e-9) delete weightTotals[action.category]
   }
 

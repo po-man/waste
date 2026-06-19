@@ -77,4 +77,18 @@ describe('tally engine', () => {
     expect(csv).toContain('發泡膠,1.5')
     expect(csv).toContain('其他垃圾,2.2')
   })
+
+  it('enforces rounding rules for counts and weights', () => {
+    let s = createEmptyState()
+    // 0.1 + 0.2 is 0.30000000000000004 in JS, we should round it to 0.3
+    s = addEntry(s, '發泡膠', 0.1, 'weight').state
+    s = addEntry(s, '發泡膠', 0.2, 'weight').state
+    expect(s.totals['發泡膠']).toBe(0.3)
+    expect(s.weightTotals?.['發泡膠']).toBe(0.3)
+
+    // Check count rounding (always integer)
+    s = addEntry(s, '煙頭', 1.6, 'count').state
+    expect(s.totals['煙頭']).toBe(2)
+    expect(s.countTotals?.['煙頭']).toBe(2)
+  })
 })
