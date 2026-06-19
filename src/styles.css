@@ -30,6 +30,13 @@ textarea { width: 100%; font-family: monospace; }
 .category-carousel .cat { padding: 0.35rem; background: #fff; border-radius: 4px; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 38px; margin: 0; }
 .category-carousel .cat .name { font-size: 12px; line-height: 1.1 }
 .category-carousel .cat .total { font-size: 14px; font-weight: 700; margin-top: 0.1rem; }
+.category-carousel .cat:active {
+  background: #e0e0e0; /* A slightly darker background */
+  border-color: #b0b0b0; /* A slightly darker border */
+  transform: scale(0.98); /* A slight shrink effect */
+  transition: background 0.1s, border-color 0.1s, transform 0.1s;
+}
+
 .carousel-indicators { display: flex; justify-content: center; gap: 0.35rem; padding: 0.4rem 0 0.35rem; }
 .indicator { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #999; background: transparent; padding: 0; }
 .indicator.active { background: #333; }
@@ -54,6 +61,9 @@ textarea { width: 100%; font-family: monospace; }
 .action-log { border: 1px solid #c4c4c4; border-radius: 6px; padding: 0 0.25rem; margin: 0 0.25rem; overflow-y: auto; background: #fff; }
 .action-log .entry { display: flex; justify-content: space-between; align-items: center; padding: 0 0.15rem; min-height: 28px; border-bottom: 1px solid #eee; font-size: 13px; }
 .action-log .entry:last-child { border-bottom: none; }
+.action-log .entry.newest {
+  font-weight: 700;
+}
 .action-log button { font-size: 12px; padding: 0 0.35rem; }
 
 .event-info { display: none; }

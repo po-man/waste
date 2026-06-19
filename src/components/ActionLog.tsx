@@ -7,14 +7,19 @@ type Props = {
 }
 
 export default function ActionLog({ actions, onUndo }: Props) {
+  const newestActionId = actions.length > 0 ? actions[actions.length - 1].id : null
+
   return (
     <div className="action-log">
-      {actions.map(a => (
-        <div key={a.id} className="entry">
-          <span>{ a.category } +{`${a.value} ${a.type === 'count' ? '' : 'kg'}`}</span>
-          <button onClick={() => onUndo(a)}>Undo</button>
-        </div>
-      ))}
+      {actions.map(a => {
+        const isNewest = a.id === newestActionId
+        return (
+          <div key={a.id} className={`entry ${isNewest ? 'newest' : ''}`}>
+            <button onClick={() => onUndo(a)}>Undo</button>
+            <span>{ a.category } +{`${a.value} ${a.type === 'count' ? '' : 'kg'}`}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }
