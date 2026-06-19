@@ -31,7 +31,7 @@ textarea { width: 100%; font-family: monospace; }
   -webkit-overflow-scrolling: touch;
   flex: 1; /* Allow this to grow and fill available space */
 }
-.carousel-page { min-width: 100%; padding: 0.5rem; scroll-snap-align: start; box-sizing: border-box; overflow-y: auto; }
+.carousel-page { min-width: 100%; padding: 0.5rem; scroll-snap-align: start; scroll-snap-stop: always; box-sizing: border-box; overflow-y: auto; }
 .group-header { padding: 0.25rem 0; font-size: 13px; font-weight: 600; background: #f8f8f8; }
 .category-carousel .items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 0.25rem 0 0; }
 .category-carousel .cat { padding: 0.35rem; background: #fff; border-radius: 4px; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60px; margin: 0; }
