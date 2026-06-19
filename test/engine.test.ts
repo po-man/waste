@@ -47,7 +47,7 @@ describe('tally engine', () => {
 
     // Requirement 1: show categories even if they are 0, and keep original order
     expect(csv).toContain('飲筒,0')
-    expect(csv).toContain('其他垃圾,0')
+    expect(csv).toContain('其他,0')
 
     const idxYintong = csv.indexOf('飲筒,0')
     const idxJiaodai = csv.indexOf('膠袋,3')
