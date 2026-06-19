@@ -44,6 +44,16 @@ describe('tally engine', () => {
     expect(csv).toContain('膠袋,3')
     expect(csv).toContain('Weights')
     expect(csv).toContain('發泡膠,1.5')
+
+    // Requirement 1: show categories even if they are 0, and keep original order
+    expect(csv).toContain('飲筒,0')
+    expect(csv).toContain('其他垃圾,0')
+
+    const idxYintong = csv.indexOf('飲筒,0')
+    const idxJiaodai = csv.indexOf('膠袋,3')
+    const idxYantou = csv.indexOf('煙頭,0')
+    expect(idxYintong).toBeLessThan(idxJiaodai)
+    expect(idxJiaodai).toBeLessThan(idxYantou)
   })
 
   it('reconstructs separate totals for legacy states in exportCSV', () => {

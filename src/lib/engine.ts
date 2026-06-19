@@ -1,5 +1,19 @@
 export type EntryType = 'count' | 'weight'
 
+export const DEFAULT_COUNT_CATEGORIES = [
+  '飲筒', '飲品杯', '硬膠食物容器', '發泡膠容器', '外賣餐具',
+  '膠水樽', '膠水樽樽蓋', '其他飲品與食物容器', '非食物的瓶罐與容器',
+  '膠袋', '食品包裝袋', '生果網',
+  '金屬罐', '紙包/鋁包飲品盒', '玻璃瓶', '衣物/鞋履/袋',
+  '牙刷', '針筒/針頭', '棉花棒', '口罩',
+  '釣魚用具', '浮標浮球浮筒', '漁網與繩子',
+  '煙頭', '火機', '其他'
+]
+
+export const DEFAULT_WEIGHT_CATEGORIES = [
+  '發泡膠', '其他垃圾'
+]
+
 export type Action = {
   id: string
   category: string
@@ -113,7 +127,7 @@ export function exportCSV(state: State): string {
   if (!finalCountTotals || !finalWeightTotals) {
     finalCountTotals = {}
     finalWeightTotals = {}
-    const knownWeights = new Set(['發泡膠', '膠水樽', '雜項'])
+    const knownWeights = new Set(DEFAULT_WEIGHT_CATEGORIES)
     if (state.actions) {
       for (const a of state.actions) {
         if (a.type === 'weight') knownWeights.add(a.category)
@@ -131,16 +145,30 @@ export function exportCSV(state: State): string {
   // Counts Section
   rows.push('Counts')
   rows.push('Category,Total')
-  for (const [cat, total] of Object.entries(finalCountTotals)) {
+  const countKeys = new Set(DEFAULT_COUNT_CATEGORIES)
+  for (const cat of DEFAULT_COUNT_CATEGORIES) {
+    const total = finalCountTotals[cat] ?? 0
     rows.push(`${escapeCsv(cat)},${total}`)
+  }
+  for (const [cat, total] of Object.entries(finalCountTotals)) {
+    if (!countKeys.has(cat)) {
+      rows.push(`${escapeCsv(cat)},${total}`)
+    }
   }
   rows.push('')
 
   // Weights Section
   rows.push('Weights')
   rows.push('Category,Total')
-  for (const [cat, total] of Object.entries(finalWeightTotals)) {
+  const weightKeys = new Set(DEFAULT_WEIGHT_CATEGORIES)
+  for (const cat of DEFAULT_WEIGHT_CATEGORIES) {
+    const total = finalWeightTotals[cat] ?? 0
     rows.push(`${escapeCsv(cat)},${total}`)
+  }
+  for (const [cat, total] of Object.entries(finalWeightTotals)) {
+    if (!weightKeys.has(cat)) {
+      rows.push(`${escapeCsv(cat)},${total}`)
+    }
   }
 
   // Actions (optional)

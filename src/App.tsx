@@ -113,7 +113,7 @@ export default function App() {
     <div className="app">
       <div className="sticky-header">
         <button onClick={handleExport}>Download Data</button>
-        <button onClick={clearSession}>Clear</button>
+        <button onClick={clearSession}>Clear All</button>
       </div>
 
       <div className="main-content">

@@ -11,6 +11,27 @@ type Props = {
   onCategoryClick: (category: string) => void
 }
 
+function getCategoryStyle(cat: string): React.CSSProperties {
+  const group1 = new Set(['飲筒', '飲品杯', '硬膠食物容器', '發泡膠容器', '外賣餐具'])
+  const group2 = new Set(['膠袋', '食品包裝袋', '生果網'])
+  const group3 = new Set(['膠水樽', '膠水樽樽蓋', '其他飲品與食物容器', '非食物的瓶罐與容器'])
+  const group4 = new Set(['金屬罐', '紙包/鋁包飲品盒', '玻璃瓶', '衣物/鞋履/袋'])
+
+  if (group1.has(cat)) {
+    return { backgroundColor: '#eeeeee', color: '#1111111', borderColor: '#dddddd' }
+  }
+  if (group2.has(cat)) {
+    return { backgroundColor: '#f7f7f7', color: '#1111111', borderColor: '#dddddd' }
+  }
+  if (group3.has(cat)) {
+    return { backgroundColor: '#e5e5e5', color: '#1111111', borderColor: '#dddddd' }
+  }
+  if (group4.has(cat)) {
+    return { backgroundColor: '#f7f7f7', color: '#1111111', borderColor: '#dddddd' }
+  }
+  return {}
+}
+
 export default function CategoryGrid({ pages, currentPage, onPageChange, totals, onCategoryClick }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -47,7 +68,12 @@ export default function CategoryGrid({ pages, currentPage, onPageChange, totals,
                 <div className="group-header">{group.title}</div>
                 <div className="items">
                   {group.items.map(cat => (
-                    <button key={cat} className="cat" onClick={() => onCategoryClick(cat)}>
+                    <button
+                      key={cat}
+                      className="cat"
+                      style={getCategoryStyle(cat)}
+                      onClick={() => onCategoryClick(cat)}
+                    >
                       <div className="name">{cat}</div>
                       <div className="total">{totals[cat] ?? 0}</div>
                     </button>

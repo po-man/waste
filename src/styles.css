@@ -38,10 +38,9 @@ textarea { width: 100%; font-family: monospace; }
 .category-carousel .cat .name { font-size: 12px; line-height: 1.1 }
 .category-carousel .cat .total { font-size: 14px; font-weight: 700; margin-top: 0.1rem; }
 .category-carousel .cat:active {
-  background: #e0e0e0; /* A slightly darker background */
-  border-color: #b0b0b0; /* A slightly darker border */
+  filter: brightness(0.85) contrast(1.05);
   transform: scale(0.98); /* A slight shrink effect */
-  transition: background 0.1s, border-color 0.1s, transform 0.1s;
+  transition: filter 0.1s, transform 0.1s;
 }
 
 .carousel-indicators { display: flex; justify-content: center; gap: 0.35rem; padding: 0.4rem 0 0.35rem; }
