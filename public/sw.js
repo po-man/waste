@@ -1,10 +1,10 @@
 const CACHE_NAME = 'coastline-v1';
 const ASSETS = [
-  '/waste/',
-  '/waste/index.html',
-  '/waste/manifest.json',
-  '/waste/icon-192.png',
-  '/waste/icon-512.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 // Install event - caching assets
