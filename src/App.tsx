@@ -103,14 +103,12 @@ export default function App() {
 
   return (
     <div className="app">
-      <header>
-        <div>
-          <button onClick={() => setMode('count')} disabled={mode === 'count'}>Count</button>
-          <button onClick={() => setMode('weight')} disabled={mode === 'weight'}>Weight</button>
-          <button onClick={handleExport}>Download CSV</button>
-          <button onClick={clearSession}>Clear Session</button>
-        </div>
-      </header>
+      <div className="sticky-header">
+        <button onClick={() => setMode('count')} disabled={mode === 'count'}>Count</button>
+        <button onClick={() => setMode('weight')} disabled={mode === 'weight'}>Weight</button>
+        <button onClick={handleExport}>Download Data</button>
+        <button onClick={clearSession}>Clear</button>
+      </div>
 
       <CategoryGrid
         groups={mode === 'count' ? groupedCount : groupedWeight}
@@ -118,13 +116,14 @@ export default function App() {
         onCategoryClick={handleCategoryClick}
       />
 
-      <ActionLog actions={engineState.actions.slice(0, 3)} onUndo={handleUndo} />
-
-      <Numpad
-        value={numpadValue}
-        onChange={setNumpadValue}
-        allowDecimal={mode === 'weight'}
-      />
+      <div className="sticky-panel">
+        <ActionLog actions={engineState.actions.slice(0, 1)} onUndo={handleUndo} />
+        <Numpad
+          value={numpadValue}
+          onChange={setNumpadValue}
+          allowDecimal={mode === 'weight'}
+        />
+      </div>
     </div>
   )
 }
