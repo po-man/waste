@@ -232,12 +232,13 @@ button {
 
 .numpad .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 0.25rem;
   padding: 0.3rem 0.6rem 0.6rem;
 }
 
 .numpad button {
+  grid-column: span 2;
   padding: 0.4rem;
   font-family: var(--font-sans);
   font-size: 26px;
@@ -260,23 +261,58 @@ button {
 }
 
 /* Decimal button styling */
-.numpad button:nth-child(11) {
+.numpad button.decimal {
+  grid-column: span 1;
   background: #FFF9F2;
   color: #A16207;
   border-color: rgba(255, 215, 170, 0.3);
 }
-.numpad button:nth-child(11):active:not(:disabled) {
+.numpad button.decimal:active:not(:disabled) {
   background: #FFEED9;
 }
 
+/* Sign button styling */
+.numpad button.sign {
+  grid-column: span 1;
+  background: #F8FAFC;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+.numpad button.sign:active {
+  background: #F1F5F9;
+}
+
 /* Backspace button styling */
-.numpad button:last-child {
+.numpad button.backspace {
+  grid-column: span 2;
   background: #FEF2F2;
   color: #991B1B;
   border-color: #FEE2E2;
 }
-.numpad button:last-child:active {
+.numpad button.backspace:active {
   background: #FEE2E2;
+}
+
+/* Display flash-red validation animation */
+@keyframes flash-red-shake {
+  0%, 100% {
+    transform: translateX(0);
+    background-color: transparent;
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+  15%, 45%, 75% {
+    background-color: rgba(254, 226, 226, 0.85);
+    color: #DC2626;
+  }
+}
+
+.numpad .display.flash-red {
+  animation: flash-red-shake 0.55s ease-in-out;
 }
 
 .numpad button:disabled {
@@ -333,9 +369,16 @@ button {
   cursor: pointer;
 }
 
-.action-log button:active {
+.action-log button:active:not(:disabled) {
   transform: scale(0.95);
   background: #FEF2F2;
+}
+
+.action-log button:disabled {
+  background: #F1F5F9;
+  color: #CBD5E1;
+  border-color: #E2E8F0;
+  cursor: not-allowed;
 }
 
 @media (min-width: 900px) {

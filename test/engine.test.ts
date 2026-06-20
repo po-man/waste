@@ -162,4 +162,43 @@ describe('tally engine', () => {
     expect(csv).toContain('膠樽,4.5,1')
     expect(csv).toContain('雜項,0,0')
   })
+
+  it('handles negative inputs and bag count offsets correctly', () => {
+    let s = createEmptyState()
+
+    // Counts section negative test
+    s = addEntry(s, '煙頭', 10, 'count').state
+    expect(s.totals['煙頭']).toBe(10)
+    expect(s.countTotals?.['煙頭']).toBe(10)
+
+    s = addEntry(s, '煙頭', -3, 'count').state
+    expect(s.totals['煙頭']).toBe(7)
+    expect(s.countTotals?.['煙頭']).toBe(7)
+
+    // Weights section negative test (no offset to number of bags)
+    s = addEntry(s, '發泡膠', 4.5, 'weight').state
+    expect(s.totals['發泡膠']).toBe(4.5)
+    expect(s.weightTotals?.['發泡膠']).toBe(4.5)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(1)
+
+    s = addEntry(s, '發泡膠', 2.0, 'weight').state
+    expect(s.totals['發泡膠']).toBe(6.5)
+    expect(s.weightTotals?.['發泡膠']).toBe(6.5)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(2)
+
+    // Add negative weight
+    const rNeg = addEntry(s, '發泡膠', -1.5, 'weight')
+    s = rNeg.state
+    expect(s.totals['發泡膠']).toBe(5.0)
+    expect(s.weightTotals?.['發泡膠']).toBe(5.0)
+    // Bags should NOT have changed (should stay 2)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(2)
+
+    // Undo the negative weight
+    s = undoAction(s, rNeg.action.id)
+    expect(s.totals['發泡膠']).toBe(6.5)
+    expect(s.weightTotals?.['發泡膠']).toBe(6.5)
+    // Bags should still stay 2
+    expect(s.weightBagTotals?.['發泡膠']).toBe(2)
+  })
 })

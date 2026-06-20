@@ -118,7 +118,9 @@ export function addEntry(state: State, category: string, value: number, type: En
   } else {
     const rawWeight = (weightTotals[category] || 0) + processedValue
     weightTotals[category] = Math.round(rawWeight * 100) / 100
-    weightBagTotals[category] = (weightBagTotals[category] || 0) + 1
+    if (processedValue >= 0) {
+      weightBagTotals[category] = (weightBagTotals[category] || 0) + 1
+    }
   }
 
   const newState: State = {
@@ -156,9 +158,11 @@ export function undoAction(state: State, actionId: string): State {
     weightTotals[action.category] = Math.round(rawWeight * 100) / 100
     if (Math.abs(weightTotals[action.category]) < 1e-9) delete weightTotals[action.category]
 
-    const rawBags = (weightBagTotals[action.category] || 0) - 1
-    weightBagTotals[action.category] = Math.max(0, rawBags)
-    if (weightBagTotals[action.category] === 0) delete weightBagTotals[action.category]
+    if (action.value >= 0) {
+      const rawBags = (weightBagTotals[action.category] || 0) - 1
+      weightBagTotals[action.category] = Math.max(0, rawBags)
+      if (weightBagTotals[action.category] === 0) delete weightBagTotals[action.category]
+    }
   }
 
   const newActions = state.actions.slice()

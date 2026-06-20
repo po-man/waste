@@ -69,6 +69,7 @@ function saveState(s: EngineState) {
 export default function App() {
   const [engineState, setEngineState] = useState<EngineState>(() => loadState())
   const [numpadValue, setNumpadValue] = useState('')
+  const [isNumpadFlashing, setIsNumpadFlashing] = useState(false)
   const [page, setPage] = useState(0)
 
   useEffect(() => saveState(engineState), [engineState])
@@ -79,7 +80,24 @@ export default function App() {
   function handleCategoryClick(category: string) {
     const val = numpadValue.trim() === '' ? 1 : Number(numpadValue)
     if (!isFinite(val)) return
+
     const entryType = page === 2 ? 'weight' : 'count'
+    const processedValue = entryType === 'count' ? Math.round(val) : Math.round(val * 100) / 100
+
+    if (processedValue < 0) {
+      const currentTotal = entryType === 'count'
+        ? (engineState.countTotals?.[category] || 0)
+        : (engineState.weightTotals?.[category] || 0)
+
+      const newTotal = currentTotal + processedValue
+      const roundedNewTotal = entryType === 'count' ? Math.round(newTotal) : Math.round(newTotal * 100) / 100
+
+      if (roundedNewTotal < 0) {
+        setIsNumpadFlashing(true)
+        return
+      }
+    }
+
     const { state } = addEntry(engineState, category, val, entryType)
     setEngineState(state)
     setNumpadValue('')
@@ -133,11 +151,13 @@ export default function App() {
       </div>
 
       <div className="sticky-panel">
-        <ActionLog actions={engineState.actions.slice(0, 2).reverse()} onUndo={handleUndo} />
+        <ActionLog actions={engineState.actions.slice(0, 2).reverse()} onUndo={handleUndo} totals={totals} />
         <Numpad
           value={numpadValue}
           onChange={setNumpadValue}
           allowDecimal={decimalEnabled}
+          isFlashing={isNumpadFlashing}
+          onFlashEnd={() => setIsNumpadFlashing(false)}
         />
       </div>
     </div>
