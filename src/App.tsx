@@ -5,6 +5,7 @@ import {
   addEntry,
   createEmptyState,
   exportCSV,
+  hydrateState,
   undoAction
 } from './lib/engine'
 import Numpad from './components/Numpad'
@@ -51,7 +52,7 @@ function loadState(): EngineState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return createEmptyState()
-    return JSON.parse(raw) as EngineState
+    return hydrateState(JSON.parse(raw) as EngineState)
   } catch (e) {
     return createEmptyState()
   }
@@ -126,6 +127,7 @@ export default function App() {
           currentPage={page}
           onPageChange={setPage}
           totals={totals}
+          weightBagTotals={engineState.weightBagTotals}
           onCategoryClick={handleCategoryClick}
         />
       </div>

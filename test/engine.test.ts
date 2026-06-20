@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createEmptyState, addEntry, undoAction, exportCSV, setEventInfo } from '../src/lib/engine'
+import { createEmptyState, addEntry, undoAction, exportCSV, setEventInfo, hydrateState } from '../src/lib/engine'
 
 describe('tally engine', () => {
   it('adds counts and weights and updates totals', () => {
@@ -90,5 +90,76 @@ describe('tally engine', () => {
     s = addEntry(s, '煙頭', 1.6, 'count').state
     expect(s.totals['煙頭']).toBe(2)
     expect(s.countTotals?.['煙頭']).toBe(2)
+  })
+
+  it('tracks weight bag counts correctly on add and undo', () => {
+    let s = createEmptyState()
+    expect(s.weightBagTotals?.['發泡膠']).toBeUndefined()
+
+    // 1st entry
+    s = addEntry(s, '發泡膠', 2.3, 'weight').state
+    expect(s.totals['發泡膠']).toBe(2.3)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(1)
+
+    // 2nd entry
+    const r2 = addEntry(s, '發泡膠', 1.2, 'weight')
+    s = r2.state
+    expect(s.totals['發泡膠']).toBe(3.5)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(2)
+
+    // Undo 2nd entry
+    s = undoAction(s, r2.action.id)
+    expect(s.totals['發泡膠']).toBe(2.3)
+    expect(s.weightBagTotals?.['發泡膠']).toBe(1)
+
+    // Check count totals do not affect weight bags
+    s = addEntry(s, '膠袋', 5, 'count').state
+    expect(s.weightBagTotals?.['膠袋']).toBeUndefined()
+  })
+
+  it('hydrates legacy states correctly', () => {
+    // Legacy state with no weightBagTotals and no countTotals/weightTotals
+    const legacyState = {
+      eventInfo: {},
+      totals: {
+        '膠袋': 10,
+        '發泡膠': 5.5
+      },
+      actions: [
+        { id: '1', category: '發泡膠', value: 2.5, type: 'weight', timestamp: Date.now() },
+        { id: '2', category: '發泡膠', value: 3.0, type: 'weight', timestamp: Date.now() }
+      ]
+    } as any
+
+    const hydrated = hydrateState(legacyState)
+    expect(hydrated.countTotals?.['膠袋']).toBe(10)
+    expect(hydrated.weightTotals?.['發泡膠']).toBe(5.5)
+    expect(hydrated.weightBagTotals?.['發泡膠']).toBe(2)
+
+    // Legacy state with total weight but no actions (truncated actions list fallback to 1 bag)
+    const truncatedLegacyState = {
+      eventInfo: {},
+      totals: {
+        '發泡膠': 5.5
+      },
+      actions: []
+    } as any
+
+    const hydrated2 = hydrateState(truncatedLegacyState)
+    expect(hydrated2.weightBagTotals?.['發泡膠']).toBe(1)
+  })
+
+  it('exports CSV with 3 columns under 秤重 section including 總袋數', () => {
+    let s = createEmptyState()
+    s = addEntry(s, '發泡膠', 2.3, 'weight').state
+    s = addEntry(s, '發泡膠', 1.2, 'weight').state
+    s = addEntry(s, '膠樽', 4.5, 'weight').state
+
+    const csv = exportCSV(s)
+    expect(csv).toContain('秤重')
+    expect(csv).toContain('類別,總重量 (kg),總袋數')
+    expect(csv).toContain('發泡膠,3.5,2')
+    expect(csv).toContain('膠樽,4.5,1')
+    expect(csv).toContain('雜項,0,0')
   })
 })

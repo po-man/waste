@@ -28,10 +28,63 @@ export type State = {
   actions: Action[]
   countTotals?: Record<string, number>
   weightTotals?: Record<string, number>
+  weightBagTotals?: Record<string, number>
 }
 
 export function createEmptyState(): State {
-  return { eventInfo: {}, totals: {}, actions: [], countTotals: {}, weightTotals: {} }
+  return { eventInfo: {}, totals: {}, actions: [], countTotals: {}, weightTotals: {}, weightBagTotals: {} }
+}
+
+export function hydrateState(state: State): State {
+  const countTotals = state.countTotals ? { ...state.countTotals } : {}
+  const weightTotals = state.weightTotals ? { ...state.weightTotals } : {}
+
+  const hasCountTotals = !!state.countTotals
+  const hasWeightTotals = !!state.weightTotals
+
+  if (!hasCountTotals || !hasWeightTotals) {
+    const knownWeights = new Set(DEFAULT_WEIGHT_CATEGORIES)
+    if (state.actions) {
+      for (const a of state.actions) {
+        if (a.type === 'weight') knownWeights.add(a.category)
+      }
+    }
+    for (const [cat, val] of Object.entries(state.totals || {})) {
+      if (knownWeights.has(cat)) {
+        if (!hasWeightTotals) {
+          weightTotals[cat] = val
+        }
+      } else {
+        if (!hasCountTotals) {
+          countTotals[cat] = val
+        }
+      }
+    }
+  }
+
+  const weightBagTotals = state.weightBagTotals ? { ...state.weightBagTotals } : {}
+  if (!state.weightBagTotals) {
+    const actionsCount: Record<string, number> = {}
+    if (state.actions) {
+      for (const a of state.actions) {
+        if (a.type === 'weight') {
+          actionsCount[a.category] = (actionsCount[a.category] || 0) + 1
+        }
+      }
+    }
+    for (const [cat, val] of Object.entries(weightTotals)) {
+      if (val > 0) {
+        weightBagTotals[cat] = actionsCount[cat] || 1
+      }
+    }
+  }
+
+  return {
+    ...state,
+    countTotals,
+    weightTotals,
+    weightBagTotals
+  }
 }
 
 function makeId(): string {
@@ -58,12 +111,14 @@ export function addEntry(state: State, category: string, value: number, type: En
 
   const countTotals = { ...(state.countTotals || {}) }
   const weightTotals = { ...(state.weightTotals || {}) }
+  const weightBagTotals = { ...(state.weightBagTotals || {}) }
   if (type === 'count') {
     const rawCount = (countTotals[category] || 0) + processedValue
     countTotals[category] = Math.round(rawCount)
   } else {
     const rawWeight = (weightTotals[category] || 0) + processedValue
     weightTotals[category] = Math.round(rawWeight * 100) / 100
+    weightBagTotals[category] = (weightBagTotals[category] || 0) + 1
   }
 
   const newState: State = {
@@ -71,6 +126,7 @@ export function addEntry(state: State, category: string, value: number, type: En
     totals: newTotals,
     countTotals,
     weightTotals,
+    weightBagTotals,
     actions: [action, ...state.actions].slice(0, 100) // keep last 100
   }
 
@@ -90,6 +146,7 @@ export function undoAction(state: State, actionId: string): State {
 
   const countTotals = { ...(state.countTotals || {}) }
   const weightTotals = { ...(state.weightTotals || {}) }
+  const weightBagTotals = { ...(state.weightBagTotals || {}) }
   if (type === 'count') {
     const rawCount = (countTotals[action.category] || 0) - action.value
     countTotals[action.category] = Math.round(rawCount)
@@ -98,12 +155,16 @@ export function undoAction(state: State, actionId: string): State {
     const rawWeight = (weightTotals[action.category] || 0) - action.value
     weightTotals[action.category] = Math.round(rawWeight * 100) / 100
     if (Math.abs(weightTotals[action.category]) < 1e-9) delete weightTotals[action.category]
+
+    const rawBags = (weightBagTotals[action.category] || 0) - 1
+    weightBagTotals[action.category] = Math.max(0, rawBags)
+    if (weightBagTotals[action.category] === 0) delete weightBagTotals[action.category]
   }
 
   const newActions = state.actions.slice()
   newActions.splice(idx, 1)
 
-  return { ...state, totals: newTotals, countTotals, weightTotals, actions: newActions }
+  return { ...state, totals: newTotals, countTotals, weightTotals, weightBagTotals, actions: newActions }
 }
 
 export function setEventInfo(state: State, info: Record<string, string>): State {
@@ -168,15 +229,18 @@ export function exportCSV(state: State): string {
 
   // Weights Section
   rows.push('秤重')
-  rows.push('類別,總重量 (kg)')
+  rows.push('類別,總重量 (kg),總袋數')
+  const finalWeightBagTotals = state.weightBagTotals ? { ...state.weightBagTotals } : {}
   const weightKeys = new Set(DEFAULT_WEIGHT_CATEGORIES)
   for (const cat of DEFAULT_WEIGHT_CATEGORIES) {
     const total = finalWeightTotals[cat] ?? 0
-    rows.push(`${escapeCsv(cat)},${total}`)
+    const bags = finalWeightBagTotals[cat] ?? 0
+    rows.push(`${escapeCsv(cat)},${total},${bags}`)
   }
   for (const [cat, total] of Object.entries(finalWeightTotals)) {
     if (!weightKeys.has(cat)) {
-      rows.push(`${escapeCsv(cat)},${total}`)
+      const bags = finalWeightBagTotals[cat] ?? 0
+      rows.push(`${escapeCsv(cat)},${total},${bags}`)
     }
   }
 

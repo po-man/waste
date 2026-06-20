@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { DEFAULT_WEIGHT_CATEGORIES } from '../lib/engine'
 
 type Group = { title: string; items: string[] }
 type Page = { title: string; groups: Group[] }
@@ -8,6 +9,7 @@ type Props = {
   currentPage: number
   onPageChange: (index: number) => void
   totals: Record<string, number>
+  weightBagTotals?: Record<string, number>
   onCategoryClick: (category: string) => void
 }
 
@@ -73,7 +75,7 @@ function getCategoryStyle(cat: string): React.CSSProperties {
   }
 }
 
-export default function CategoryGrid({ pages, currentPage, onPageChange, totals, onCategoryClick }: Props) {
+export default function CategoryGrid({ pages, currentPage, onPageChange, totals, weightBagTotals, onCategoryClick }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -108,17 +110,23 @@ export default function CategoryGrid({ pages, currentPage, onPageChange, totals,
               <div key={group.title} className="group-block">
                 <div className="group-header">{group.title}</div>
                 <div className="items">
-                  {group.items.map(cat => (
-                    <button
-                      key={cat}
-                      className="cat"
-                      style={getCategoryStyle(cat)}
-                      onClick={() => onCategoryClick(cat)}
-                    >
-                      <div className="name">{cat}</div>
-                      <div className="total">{totals[cat] ?? 0}</div>
-                    </button>
-                  ))}
+                  {group.items.map(cat => {
+                    const isWeight = DEFAULT_WEIGHT_CATEGORIES.includes(cat)
+                    const bags = weightBagTotals?.[cat] ?? 0
+                    return (
+                      <button
+                        key={cat}
+                        className="cat"
+                        style={getCategoryStyle(cat)}
+                        onClick={() => onCategoryClick(cat)}
+                      >
+                        <div className="name">
+                          {isWeight ? `${cat} (${bags})` : cat}
+                        </div>
+                        <div className="total">{totals[cat] ?? 0}</div>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             ))}
